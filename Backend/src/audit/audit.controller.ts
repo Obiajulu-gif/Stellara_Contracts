@@ -2,16 +2,15 @@ import { Controller, Get, Query, UseGuards } from '@nestjs/common';
 import { AuditService } from './audit.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../guards/roles.guard';
-import { ROLES_KEY } from '../decorators/roles.decorator';
 import { Roles } from '../decorators/roles.decorator';
 import { Role } from '../auth/roles.enum';
 
-@Controller('admin/audit')
+@Controller()
 @UseGuards(JwtAuthGuard, RolesGuard)
 export class AuditController {
   constructor(private readonly auditService: AuditService) {}
 
-  @Get('logs')
+  @Get('admin/audit/logs')
   @Roles(Role.ADMIN)
   async getLogs(
     @Query('page') page?: number,
@@ -29,5 +28,11 @@ export class AuditController {
       from,
       to,
     });
+  }
+
+  @Get('audit/verify')
+  @Roles(Role.ADMIN)
+  async verify() {
+    return this.auditService.verifyIntegrity();
   }
 }

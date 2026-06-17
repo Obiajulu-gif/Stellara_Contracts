@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { OnEvent } from '@nestjs/event-emitter';
 
 import { AuditService } from './audit.service';
 import { AuditEvent } from './audit.event';
@@ -7,6 +8,7 @@ import { AuditEvent } from './audit.event';
 export class AuditListener {
   constructor(private readonly auditService: AuditService) {}
 
+  @OnEvent('audit.log')
   async handleAudit(event: AuditEvent) {
     await this.auditService.logAction(
       event.action_type,

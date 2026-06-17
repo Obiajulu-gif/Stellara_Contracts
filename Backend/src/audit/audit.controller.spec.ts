@@ -9,6 +9,7 @@ describe('AuditController (Admin)', () => {
 
   const mockAuditService = {
     getLogs: jest.fn(),
+    verifyIntegrity: jest.fn(),
   };
 
   beforeEach(async () => {
@@ -65,5 +66,12 @@ describe('AuditController (Admin)', () => {
       expect(e.response).toBeDefined();
       expect(e.status).toBe(403);
     }
+  });
+
+  it('should verify audit log integrity', async () => {
+    const verification = { valid: true, checked: 1, errors: [] };
+    mockAuditService.verifyIntegrity.mockResolvedValue(verification);
+
+    await expect(controller.verify()).resolves.toEqual(verification);
   });
 });
